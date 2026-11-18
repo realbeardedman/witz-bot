@@ -1,0 +1,167 @@
+{
+  "language": "en",
+  "handle": "@deadpan.desk",
+  "feed": {
+    "hl": "en-US",
+    "gl": "US",
+    "ceid": "US:en"
+  },
+  "topics": [
+    {
+      "name": "Money & Work",
+      "query": "salary OR boss OR \"remote work\" OR office OR inflation OR \"job market\"",
+      "hashtags": [
+        "#worklife",
+        "#office"
+      ]
+    },
+    {
+      "name": "Dating & Relationships",
+      "query": "dating OR \"dating app\" OR relationship OR wedding OR singles",
+      "hashtags": [
+        "#dating",
+        "#relationships"
+      ]
+    },
+    {
+      "name": "Luxury & Shopping",
+      "query": "luxury OR shopping OR prices OR \"Black Friday\" OR travel OR restaurant",
+      "hashtags": [
+        "#shopping",
+        "#lifestyle"
+      ]
+    },
+    {
+      "name": "Tech & AI",
+      "query": "\"artificial intelligence\" OR ChatGPT OR smartphone OR robot OR app",
+      "hashtags": [
+        "#ai",
+        "#tech"
+      ]
+    },
+    {
+      "name": "Weird News",
+      "query": "bizarre OR \"world record\" OR \"study finds\" OR unusual OR weird",
+      "hashtags": [
+        "#weirdnews",
+        "#funny"
+      ]
+    }
+  ],
+  "formats": [
+    {
+      "name": "Headline joke",
+      "instruction": "Classic topical joke: the setup takes the headline somewhere expected, the punchline twists it."
+    },
+    {
+      "name": "Honest headline",
+      "instruction": "Setup: the official version of the story, sharpened to 12 words max, starting with 'Officially:'. Punchline: the honest version, what it actually means for normal people, starting with 'Honestly:'."
+    },
+    {
+      "name": "Relatable",
+      "instruction": "Setup connects the headline to an everyday situation almost everyone knows (office, family, roommates, relationships). Punchline is the exaggerated, recognisable reaction."
+    }
+  ],
+  "always_hashtags": [
+    "#deadpan",
+    "#headlines",
+    "#humor"
+  ],
+  "weekly_hashtags": [
+    "#deadpan",
+    "#headlines",
+    "#humor",
+    "#jokes",
+    "#weeklyrecap"
+  ],
+  "disclosure": "",
+  "max_article_age_hours": 48,
+  "blocklist": [
+    "dead",
+    "death",
+    "dies",
+    "died",
+    "dying",
+    "kill",
+    "killed",
+    "killing",
+    "murder",
+    "shooting",
+    "gunman",
+    "stabbing",
+    "attack",
+    "terror",
+    "war",
+    "crash",
+    "victim",
+    "disaster",
+    "earthquake",
+    "flood",
+    "wildfire",
+    "hurricane",
+    "tornado",
+    "explosion",
+    "rape",
+    "raped",
+    "abuse",
+    "assault",
+    "suicide",
+    "overdose",
+    "cancer",
+    "disease",
+    "illness",
+    "outbreak",
+    "hostage",
+    "kidnap",
+    "arrest",
+    "indicted",
+    "convicted",
+    "sentenced",
+    "migrant",
+    "immigration",
+    "deport",
+    "refugee",
+    "religion",
+    "church",
+    "muslim",
+    "islam",
+    "jewish",
+    "christian",
+    "gaza",
+    "israel",
+    "ukraine",
+    "russia",
+    "election",
+    "trump",
+    "biden",
+    "harris",
+    "vance",
+    "republican",
+    "democrat",
+    "gop",
+    "maga"
+  ],
+  "text_model": "@cf/openai/gpt-oss-120b",
+  "fallback_text_model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+  "design": {
+    "background": "#FFD43B",
+    "text": "#111111",
+    "muted": "#5C4A00",
+    "headline_box": "#111111",
+    "headline_text": "#FFFFFF",
+    "punchline_box": "#FFFFFF",
+    "punchline_text": "#111111",
+    "accent": "#E8590C"
+  },
+  "timing": {
+    "hook_seconds": 2.2,
+    "words_per_second": 3.3,
+    "min_setup_seconds": 2.5,
+    "min_punchline_seconds": 2.8,
+    "cta_seconds": 2.0
+  },
+  "audio_name": "Deadpan Desk",
+  "music_volume": 0.35,
+  "upload_mode": "resumable",
+  "graph_api_version": "v25.0"
+}
