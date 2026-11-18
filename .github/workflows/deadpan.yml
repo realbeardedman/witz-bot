@@ -1,0 +1,90 @@
+name: Deadpan Desk
+
+on:
+  schedule:
+    - cron: "17 17 * * *"   # täglich 17:17 UTC (18:17 Uhr MEZ): Reel
+    - cron: "23 9 * * 0"    # sonntags 09:23 UTC (10:23 Uhr MEZ): Wochen-Karussell
+  workflow_dispatch:
+    inputs:
+      modus:
+        description: "Was soll passieren?"
+        type: choice
+        default: testlauf
+        options:
+          - testlauf               # 1 Reel erzeugen und zum Download bereitstellen, NICHT posten
+          - posten                 # 1 Reel erzeugen und veröffentlichen
+          - startpaket             # mehrere Reels in queue/ ablegen (zur Durchsicht, NICHT posten)
+          - warteschlange_posten   # alle Reels aus queue/ veröffentlichen
+          - wochenrueckblick_test  # Wochen-Karussell rendern, NICHT posten
+          - wochenrueckblick       # Wochen-Karussell veröffentlichen
+      anzahl:
+        description: "Anzahl Reels im Startpaket"
+        default: "6"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deadpan
+  cancel-in-progress: false
+
+env:
+  CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+  CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+  IG_USER_ID: ${{ secrets.IG_USER_ID }}
+  IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+  MODUS: ${{ github.event_name == 'schedule' && (github.event.schedule == '23 9 * * 0' && 'wochenrueckblick' || 'posten') || inputs.modus }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Abhängigkeiten installieren
+        run: |
+          pip install -r requirements.txt
+          command -v ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          git config user.name "deadpan-bot"
+          git config user.email "deadpan-bot@users.noreply.github.com"
+
+      - name: Tages-Reel
+        if: env.MODUS == 'testlauf' || env.MODUS == 'posten'
+        run: |
+          python deadpan.py prepare
+          if [ "$MODUS" = "posten" ]; then python deadpan.py publish; fi
+
+      - name: Startpaket erzeugen
+        if: env.MODUS == 'startpaket'
+        run: python deadpan.py startpaket "${{ inputs.anzahl || '6' }}"
+
+      - name: Warteschlange veröffentlichen
+        if: env.MODUS == 'warteschlange_posten'
+        run: python deadpan.py queue
+
+      - name: Wochen-Karussell
+        if: env.MODUS == 'wochenrueckblick' || env.MODUS == 'wochenrueckblick_test'
+        run: |
+          if [ "$MODUS" = "wochenrueckblick" ]; then python deadpan.py weekly; else python deadpan.py weekly --dry; fi
+
+      - name: Ergebnis zum Download bereitstellen
+        if: always() && (hashFiles('out/**') != '' || hashFiles('queue/**') != '')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ergebnis-${{ env.MODUS }}-${{ github.run_number }}
+          path: |
+            out/
+            queue/
+          retention-days: 14
+
+      - name: Änderungen sichern
+        if: always() && env.MODUS != 'testlauf' && env.MODUS != 'wochenrueckblick_test'
+        run: |
+          git add -A
+          git diff --cached --quiet || git commit -m "Deadpan Desk: ${MODUS} $(date -u +%F)"
+          git pull --rebase -q && git push
