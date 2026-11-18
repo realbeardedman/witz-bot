@@ -17,6 +17,7 @@ on:
           - warteschlange_posten   # alle Reels aus queue/ veröffentlichen
           - wochenrueckblick_test  # Wochen-Karussell rendern, NICHT posten
           - wochenrueckblick       # Wochen-Karussell veröffentlichen
+          - verbindung_pruefen     # Instagram-Zugang testen und IG_USER_ID anzeigen
       anzahl:
         description: "Anzahl Reels im Startpaket"
         default: "6"
@@ -53,6 +54,10 @@ jobs:
           git config user.name "deadpan-bot"
           git config user.email "deadpan-bot@users.noreply.github.com"
 
+      - name: Verbindung prüfen
+        if: env.MODUS == 'verbindung_pruefen'
+        run: python deadpan.py check
+
       - name: Tages-Reel
         if: env.MODUS == 'testlauf' || env.MODUS == 'posten'
         run: |
@@ -83,7 +88,7 @@ jobs:
           retention-days: 14
 
       - name: Änderungen sichern
-        if: always() && env.MODUS != 'testlauf' && env.MODUS != 'wochenrueckblick_test'
+        if: always() && env.MODUS != 'testlauf' && env.MODUS != 'wochenrueckblick_test' && env.MODUS != 'verbindung_pruefen'
         run: |
           git add -A
           git diff --cached --quiet || git commit -m "Deadpan Desk: ${MODUS} $(date -u +%F)"
