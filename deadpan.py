@@ -218,7 +218,9 @@ Humor: kurz, alltagsnah, überraschend, eher frech als böse. Gute Pointen sind 
 Tabu: Witze auf Kosten von Gruppen (Herkunft, Religion, Geschlecht, Sexualität, Behinderung, Aussehen, Alter); Tod, Gewalt, Krankheit, Unglücke, Straftaten; Privatpersonen; parteipolitische Seitenhiebe; erfundene Tatsachen über reale Personen oder Firmen. Fakten nur aus der Schlagzeile, der Witz darf offensichtlich übertreiben.
 
 Liefere:
-- 3 Witz-Varianten im vorgegebenen Format: "setup" höchstens 18 Wörter, "punchline" höchstens 14 Wörter. Die Schlagzeile steht bereits oben im Video: das Setup wiederholt sie nicht wörtlich, sondern führt direkt zum Witz hin und verrät die Pointe nicht.
+- 5 Witz-Varianten im vorgegebenen Format, jede aus einem wirklich anderen Blickwinkel: "setup" höchstens 18 Wörter, "punchline" höchstens 14 Wörter. Die Schlagzeile steht bereits oben im Video: das Setup wiederholt sie nicht wörtlich, sondern führt direkt zum Witz hin und verrät die Pointe nicht.
+- Die Pointe muss an einem konkreten Detail dieser Schlagzeile hängen (eine Zahl, ein Name, eine kuriose Tatsache, die genaue Behauptung). Würde die Pointe genauso unter einer anderen Schlagzeile funktionieren, ist sie nicht gut genug.
+- Keine Ausweichpointen: keine Haustiere, Ehepartner, Schwiegermütter, "mein Chef" oder "mein Ex", außer die Schlagzeile handelt davon. Keine Standard-Einstiege wie "Na toll, jetzt…", "Endlich…", "Plot Twist:". Keine Witze, die nur sagen "ich bin faul" oder "ich bin pleite".
 - 5 Hook-Varianten, je höchstens 8 Wörter. Ein Hook stoppt das Scrollen in der ersten Sekunde: provokant oder kontraintuitiv, macht neugierig auf die Pointe, verrät sie aber nicht. Muster: kontraintuitive Behauptung ("Diese Nachricht ist besser als jeder Witz"), Ansage mit Lücke ("Mein Chef darf das nicht sehen"), direkte Ansprache ("Wenn du Single bist: nicht weiterwischen").
 - "send_to": Fortsetzung von "Schick das ...", beginnt mit "jemandem, der" oder "deinem"/"deiner", konkret und wiedererkennbar, höchstens 9 Wörter.
 - "comment_question": kurze, leicht zu beantwortende Frage an die Community (Ja/Nein, Team A oder B, eine Zahl).
@@ -230,13 +232,19 @@ Antworte ausschließlich mit JSON:
 
 EDITOR_DE = """Du bist die Schlussredaktion eines Humor-Kanals auf Instagram. Prüfe streng.
 1. Sicherheit: Verwirf jeden Witz, der Gruppen herabsetzt (Herkunft, Religion, Geschlecht, Sexualität, Behinderung, Aussehen, Alter), Tod, Gewalt, Krankheit, Unglücke oder Straftaten betrifft, Privatpersonen zeigt, parteipolitisch austeilt oder Tatsachen über reale Personen oder Firmen erfindet.
-2. Wähle den lustigsten verbleibenden Witz: überraschend, sofort verständlich, man will ihn weiterschicken. Bewerte ihn ehrlich von 1 bis 10.
+2. Bewerte jeden verbleibenden Witz von 1 bis 10 nach dieser Skala, und sei geizig:
+   - 9–10: Late-Night-Niveau, die Wendung ist überraschend und zugleich zwingend.
+   - 8: Man würde ihn tatsächlich einem Freund schicken.
+   - 6–7: solide, aber schnell vergessen.
+   - 5 oder weniger: beliebig, vorhersehbar, oder die Pointe passt zu jeder anderen Schlagzeile.
+   Hängt die Pointe nicht an einem konkreten Detail der Schlagzeile, gibt es höchstens 5 Punkte. Standard-Einstiege ("Na toll, jetzt…", "Endlich…") und Ausweichziele (Haustiere, Ehepartner, allgemeine Faulheit) bekommen höchstens 5 Punkte.
+   Wähle den Witz mit der höchsten Punktzahl.
 3. Wähle den stärksten Hook, der zum Witz passt und die Pointe nicht verrät.
 4. Kürze und schärfe, ohne den Witz zu verändern: Hook höchstens 8 Wörter, Setup höchstens 18 Wörter (wiederholt die Schlagzeile nicht wörtlich), Pointe höchstens 14 Wörter, "send_to" höchstens 9 Wörter. Keine Emojis, keine Hashtags.
-Setze "ok" auf false, wenn kein Witz die Sicherheitsprüfung besteht oder der beste unter 6 Punkten liegt.
+Setze "ok" auf false, wenn kein Witz die Sicherheitsprüfung besteht oder der beste unter 8 Punkten liegt.
 
 Antworte ausschließlich mit JSON:
-{"ok": true, "score": 7, "reason": "...", "hook": "...", "setup": "...", "punchline": "...", "send_to": "..."}"""
+{"ok": true, "score": 8, "scores": [5, 8, 6, 0, 7], "reason": "...", "hook": "...", "setup": "...", "punchline": "...", "send_to": "..."}"""
 
 
 AUTHOR_EN = """You write for an English-language Instagram account called Deadpan Desk that posts one short joke a day about a real, current headline, as a Reel. Goal: people laugh and send the Reel to one specific person.
@@ -248,7 +256,9 @@ Tone: deadpan. Dry, understated, observational, delivered with a straight face. 
 Off-limits: jokes at the expense of groups (origin, religion, gender, sexuality, disability, looks, age); death, violence, illness, disasters, crime; private individuals; partisan politics; invented facts about real people or companies. Use only facts from the headline; the joke may exaggerate obviously.
 
 Deliver:
-- 3 joke variants in the given format: "setup" max 18 words, "punchline" max 14 words. The headline is already shown at the top of the video: the setup does not repeat it word for word, it leads straight into the joke without giving away the punchline.
+- 5 joke variants in the given format, each taking a genuinely different angle: "setup" max 18 words, "punchline" max 14 words. The headline is already shown at the top of the video: the setup does not repeat it word for word, it leads straight into the joke without giving away the punchline.
+- The punchline must hinge on a specific, concrete detail of this headline (a number, a name, an odd fact, the exact claim). If the punchline would work just as well under a different headline, it is not good enough.
+- No fallback punchlines: no pets, spouses, mothers-in-law, "my boss" or "my ex" unless the headline itself is about them. No stock openers like "Great, now…", "Finally…", "Plot twist:", "Me:". No jokes that only say "I'm lazy" or "I'm broke".
 - 5 hook variants, max 8 words each. A hook stops the scroll in the first second: provocative or counterintuitive, makes people curious about the punchline without revealing it. Patterns: counterintuitive claim ("This headline is funnier than any joke"), open loop ("My boss cannot see this"), direct address ("If you're single, don't scroll").
 - "send_to": continuation of "Send this to ...", starts with "someone who" or "your", concrete and recognisable, max 9 words.
 - "comment_question": short, easy-to-answer question for the comments (yes/no, team A or B, a number).
@@ -260,13 +270,19 @@ Reply with JSON only:
 
 EDITOR_EN = """You are the final editor of a deadpan humor account on Instagram. Be strict.
 1. Safety: discard any joke that demeans groups (origin, religion, gender, sexuality, disability, looks, age), touches death, violence, illness, disasters or crime, features private individuals, takes partisan political shots or invents facts about real people or companies.
-2. Pick the funniest remaining joke: surprising, instantly understood, something you would forward. Rate it honestly from 1 to 10.
+2. Score every remaining joke from 1 to 10 with this scale, and be stingy:
+   - 9–10: late-night monologue quality, the twist is surprising and inevitable at once.
+   - 8: you would actually forward it to a friend.
+   - 6–7: competent but forgettable.
+   - 5 or lower: generic, predictable, or the punchline would fit any other headline.
+   A joke whose punchline does not depend on a concrete detail of the headline scores 5 at most. Stock openers ("Great, now…", "Finally…") and fallback targets (pets, spouses, generic laziness) score 5 at most.
+   Pick the highest-scoring joke.
 3. Pick the strongest hook that fits the joke and does not give away the punchline.
 4. Tighten without changing the joke: hook max 8 words, setup max 18 words (does not repeat the headline word for word), punchline max 14 words, "send_to" max 9 words. No emojis, no hashtags.
-Set "ok" to false if no joke passes the safety check or the best one scores below 6.
+Set "ok" to false if no joke passes the safety check or the best one scores below 8.
 
-Reply with JSON only:
-{"ok": true, "score": 7, "reason": "...", "hook": "...", "setup": "...", "punchline": "...", "send_to": "..."}"""
+Reply with JSON only ("scores" lists the score of each joke in the given order, 0 for discarded ones):
+{"ok": true, "score": 8, "scores": [5, 8, 6, 0, 7], "reason": "...", "hook": "...", "setup": "...", "punchline": "...", "send_to": "..."}"""
 
 AUTHOR = AUTHOR_EN if LANG == "en" else AUTHOR_DE
 EDITOR = EDITOR_EN if LANG == "en" else EDITOR_DE
@@ -296,7 +312,7 @@ def write_joke(topic, fmt, candidates, recent):
 
 
 def valid(final):
-    if not final.get("ok") or int(final.get("score") or 0) < 6:
+    if not final.get("ok") or int(final.get("score") or 0) < int(CFG.get("min_score", 8)):
         return False
     hook, setup, punch = clean(final.get("hook")), clean(final.get("setup")), clean(final.get("punchline"))
     if not hook or not setup or not punch:
@@ -582,8 +598,13 @@ def build_joke(topic, fmt, seen, recent):
         return None
     article, result = write_joke(topic, fmt, candidates, recent)
     if not article or not valid(result["final"]):
-        reason = result["final"].get("reason", "zu schwach") if result else "keine Schlagzeile ausgewählt"
-        print(f"{topic['name']} / {fmt['name']}: verworfen ({reason}).")
+        if not article:
+            print(f"{topic['name']} / {fmt['name']}: keine Schlagzeile ausgewählt.")
+            return None
+        f = result["final"]
+        print(f"{topic['name']} / {fmt['name']}: verworfen, beste Note {f.get('score')} "
+              f"(alle: {f.get('scores')}) – {f.get('reason', '')}\n"
+              f"   Schlagzeile: {article['title']}\n   Bester Versuch: {f.get('setup')} / {f.get('punchline')}")
         return None
     f, d = result["final"], result["draft"]
     c = {
@@ -600,6 +621,7 @@ def build_joke(topic, fmt, seen, recent):
         "comment_question": clean(d.get("comment_question") or T_["default_question"]),
         "teaser": clean(d.get("teaser") or f["hook"]),
         "score": f.get("score"),
+        "scores": f.get("scores"),
         "editor_note": f.get("reason", ""),
         "alternatives": {"hooks": d.get("hooks", []), "jokes": d.get("jokes", [])},
     }

@@ -76,6 +76,7 @@
   ],
   "disclosure": "",
   "max_article_age_hours": 48,
+  "min_score": 8,
   "blocklist": [
     "tot",
     "tote",
