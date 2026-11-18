@@ -1,0 +1,30 @@
+name: Instagram-Token erneuern
+
+# Das Instagram-Token läuft nach 60 Tagen ab. Dieser Lauf verlängert es zweimal im Monat
+# und schreibt es zurück in das Secret IG_ACCESS_TOKEN.
+on:
+  schedule:
+    - cron: "41 3 1,15 * *"
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Token verlängern und speichern
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          RESPONSE=$(curl -sS -G "https://graph.instagram.com/refresh_access_token" \
+            --data-urlencode "grant_type=ig_refresh_token" \
+            --data-urlencode "access_token=${IG_ACCESS_TOKEN}")
+          NEW_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token // empty')
+          if [ -z "$NEW_TOKEN" ]; then
+            echo "Verlängerung fehlgeschlagen:"
+            echo "$RESPONSE" | jq 'del(.access_token)'
+            exit 1
+          fi
+          echo "::add-mask::$NEW_TOKEN"
+          gh secret set IG_ACCESS_TOKEN --repo "$GITHUB_REPOSITORY" --body "$NEW_TOKEN"
+          echo "Token verlängert, gültig für $(echo "$RESPONSE" | jq -r '.expires_in / 86400 | floor') Tage."
