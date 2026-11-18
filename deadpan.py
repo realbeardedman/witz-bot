@@ -8,6 +8,7 @@ Befehle:
   python deadpan.py publish            veröffentlicht das vorbereitete Reel auf Instagram
   python deadpan.py startpaket [N]     erzeugt N Reels (Standard 6) in den Ordner queue/ zur Durchsicht
   python deadpan.py queue              veröffentlicht alle Reels aus queue/ nacheinander
+  python deadpan.py check            prüft den Instagram-Zugang und zeigt die IG_USER_ID
   python deadpan.py weekly [--dry]     Karussell "Die besten Witze der Woche" (--dry: nur rendern)
 
 Umgebungsvariablen (als GitHub-Secrets hinterlegen):
@@ -657,8 +658,39 @@ def startpaket(n=6):
 # ------------------------------------------------------------------ Instagram
 
 def ig():
-    return (f"https://graph.instagram.com/{CFG['graph_api_version']}", env("IG_USER_ID"),
+    host = CFG.get("graph_host", "graph.facebook.com")   # Unified Login; Altbestand: graph.instagram.com
+    return (f"https://{host}/{CFG['graph_api_version']}", env("IG_USER_ID"),
             {"Authorization": f"Bearer {env('IG_ACCESS_TOKEN')}"})
+
+
+def check():
+    """Prüft den Instagram-Zugang und zeigt die zugewiesenen Instagram-Konten mit ihrer ID."""
+    host = CFG.get("graph_host", "graph.facebook.com")
+    base = f"https://{host}/{CFG['graph_api_version']}"
+    headers = {"Authorization": f"Bearer {env('IG_ACCESS_TOKEN')}"}
+
+    def show_get(label, path, params=None):
+        r = requests.get(f"{base}/{path}", headers=headers, params=params or {}, timeout=60)
+        print(f"\n{label}: HTTP {r.status_code}")
+        print(json.dumps(r.json(), ensure_ascii=False, indent=2)[:1500])
+        return r
+
+    me = show_get("Token gehört zu", "me", {"fields": "id,name"})
+    if me.status_code != 200:
+        sys.exit("Das Token wird nicht akzeptiert. Token neu erzeugen und Secret IG_ACCESS_TOKEN ersetzen.")
+    show_get("Zugewiesene Instagram-Konten (die 'id' ist die IG_USER_ID)", "me/assigned_instagram_accounts",
+             {"fields": "id,username"})
+    ig_id = os.environ.get("IG_USER_ID", "").strip()
+    if ig_id:
+        acc = show_get("Konto aus IG_USER_ID", ig_id, {"fields": "id,username"})
+        lim = show_get("Veröffentlichungs-Kontingent (zeigt, ob Posten erlaubt ist)",
+                       f"{ig_id}/content_publishing_limit", {"fields": "quota_usage,config"})
+        if acc.status_code == 200 and lim.status_code == 200:
+            print(f"\nAlles bereit: @{acc.json().get('username')} kann veröffentlichen.")
+        else:
+            sys.exit("IG_USER_ID oder Berechtigungen passen noch nicht (siehe Ausgabe oben).")
+    else:
+        print("\nSecret IG_USER_ID fehlt noch: die 'id' von @deadpan.desk aus der Liste oben eintragen.")
 
 
 def git(*args):
@@ -855,6 +887,8 @@ if __name__ == "__main__":
         startpaket(int(args[1]) if len(args) > 1 else 6)
     elif args[:1] == ["queue"]:
         post_queue()
+    elif args[:1] == ["check"]:
+        check()
     elif args[:1] == ["weekly"]:
         weekly(dry="--dry" in args)
     else:

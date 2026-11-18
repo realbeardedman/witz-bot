@@ -163,5 +163,6 @@
   "audio_name": "Deadpan Desk",
   "music_volume": 0.35,
   "upload_mode": "resumable",
+  "graph_host": "graph.facebook.com",
   "graph_api_version": "v25.0"
 }
