@@ -107,6 +107,12 @@ def clean(text):
     return re.sub(r"\s+", " ", text).strip().strip('"„“').strip()
 
 
+def lower_first(text):
+    """'Someone who …' -> 'someone who …' (steht mitten im Satz 'Send this to …')."""
+    first = text.split(" ", 1)[0]
+    return text[:1].lower() + text[1:] if first in ("Someone", "Your", "Jemandem", "Deinem", "Deiner", "Deine") else text
+
+
 def words(text):
     return len(str(text).split())
 
@@ -670,7 +676,7 @@ def build_joke(topic, fmt, seen, recent):
         "hook": clean(f["hook"]),
         "setup": clean(f["setup"]),
         "punchline": clean(f["punchline"]),
-        "send_to": clean(f.get("send_to") or d.get("send_to") or T_["default_send"]).rstrip("."),
+        "send_to": lower_first(clean(f.get("send_to") or d.get("send_to") or T_["default_send"]).rstrip(".")),
         "comment_question": clean(d.get("comment_question") or T_["default_question"]),
         "teaser": clean(d.get("teaser") or f["hook"]),
         "score": f.get("score"),
