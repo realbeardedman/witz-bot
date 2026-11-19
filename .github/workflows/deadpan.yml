@@ -30,6 +30,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
   CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
   CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
   IG_USER_ID: ${{ secrets.IG_USER_ID }}

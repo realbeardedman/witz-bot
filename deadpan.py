@@ -12,7 +12,8 @@ Befehle:
   python deadpan.py weekly [--dry]     Karussell "Die besten Witze der Woche" (--dry: nur rendern)
 
 Umgebungsvariablen (als GitHub-Secrets hinterlegen):
-  CF_ACCOUNT_ID, CF_API_TOKEN     Cloudflare Workers AI (Textmodell)
+  GEMINI_API_KEY                  Google Gemini (bevorzugtes Textmodell, optional)
+  CF_ACCOUNT_ID, CF_API_TOKEN     Cloudflare Workers AI (Ausweich-Textmodell)
   IG_USER_ID, IG_ACCESS_TOKEN     Instagram (nur für publish)
 """
 import calendar
@@ -144,8 +145,35 @@ def extract_text(data):
     raise ValueError(f"Unbekanntes Antwortformat: {str(data)[:300]}")
 
 
+def gemini_text(data):
+    parts = data["candidates"][0]["content"]["parts"]
+    return "".join(p.get("text", "") for p in parts if not p.get("thought"))
+
+
 def llm(system, user):
     last = ""
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    for model in (CFG.get("gemini_models", []) if key else []):
+        try:
+            r = requests.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+                headers={"x-goog-api-key": key},
+                json={
+                    "systemInstruction": {"parts": [{"text": system}]},
+                    "contents": [{"role": "user", "parts": [{"text": user}]}],
+                    "generationConfig": {"temperature": 1.0, "responseMimeType": "application/json",
+                                         "maxOutputTokens": 8192},
+                },
+                timeout=240,
+            )
+            if r.status_code == 200:
+                result = parse_json(gemini_text(r.json()))
+                print(f"(Textmodell: {model})")
+                return result
+            last = f"{model}: HTTP {r.status_code} {r.text[:300]}"
+        except (requests.RequestException, ValueError, KeyError, IndexError) as exc:
+            last = f"{model}: {exc}"
+        print(f"Gemini-Modell nicht nutzbar ({last}), versuche das nächste.")
     for model in (CFG["text_model"], CFG.get("fallback_text_model")):
         if not model:
             continue
@@ -162,7 +190,9 @@ def llm(system, user):
                 timeout=240,
             )
             if r.status_code == 200:
-                return parse_json(extract_text(r.json()))
+                result = parse_json(extract_text(r.json()))
+                print(f"(Textmodell: {model})")
+                return result
             last = f"{model}: HTTP {r.status_code} {r.text[:300]}"
         except (requests.RequestException, ValueError, KeyError, IndexError) as exc:
             last = f"{model}: {exc}"
@@ -221,7 +251,13 @@ Liefere:
 - 5 Witz-Varianten im vorgegebenen Format, jede aus einem wirklich anderen Blickwinkel: "setup" höchstens 18 Wörter, "punchline" höchstens 14 Wörter. Die Schlagzeile steht bereits oben im Video: das Setup wiederholt sie nicht wörtlich, sondern führt direkt zum Witz hin und verrät die Pointe nicht.
 - Die Pointe muss an einem konkreten Detail dieser Schlagzeile hängen (eine Zahl, ein Name, eine kuriose Tatsache, die genaue Behauptung). Würde die Pointe genauso unter einer anderen Schlagzeile funktionieren, ist sie nicht gut genug.
 - Keine Ausweichpointen: keine Haustiere, Ehepartner, Schwiegermütter, "mein Chef" oder "mein Ex", außer die Schlagzeile handelt davon. Keine Standard-Einstiege wie "Na toll, jetzt…", "Endlich…", "Plot Twist:". Keine Witze, die nur sagen "ich bin faul" oder "ich bin pleite".
-- 5 Hook-Varianten, je höchstens 8 Wörter. Ein Hook stoppt das Scrollen in der ersten Sekunde: provokant oder kontraintuitiv, macht neugierig auf die Pointe, verrät sie aber nicht. Muster: kontraintuitive Behauptung ("Diese Nachricht ist besser als jeder Witz"), Ansage mit Lücke ("Mein Chef darf das nicht sehen"), direkte Ansprache ("Wenn du Single bist: nicht weiterwischen").
+- 5 Hook-Varianten, je höchstens 8 Wörter. Ein Hook stoppt das Scrollen in der ersten Sekunde: provokant oder kontraintuitiv, macht neugierig auf die Pointe, verrät sie aber nicht. Aussagen statt Fragen; höchstens einer der fünf darf eine Frage sein. Jeder Hook nutzt ein anderes Muster:
+  1. steile Behauptung ("Das Ehrlichste, was Netflix je gesagt hat")
+  2. überraschende Zahl oder Detail aus der Schlagzeile ("144-mal am Tag. Pro Person.")
+  3. offene Spannung ("Lies das vor deinem nächsten Meeting")
+  4. direkte Ansprache an einen bestimmten Typ ("Wenn du einen smarten Kühlschrank hast: hinsetzen")
+  5. trockenes Understatement ("Ganz normaler Dienstag bei Nvidia")
+  Keine braven Einstiege wie "Schon mal gefragt…", "Wusstest du…", "Rate mal…".
 - "send_to": Fortsetzung von "Schick das ...", beginnt mit "jemandem, der" oder "deinem"/"deiner", konkret und wiedererkennbar, höchstens 9 Wörter.
 - "comment_question": kurze, leicht zu beantwortende Frage an die Community (Ja/Nein, Team A oder B, eine Zahl).
 - "teaser": erste Zeile der Caption, höchstens 10 Wörter, ohne die Pointe.
@@ -231,7 +267,7 @@ Antworte ausschließlich mit JSON:
 {"choice": <Nummer der Schlagzeile oder 0, wenn keine taugt>, "jokes": [{"setup": "...", "punchline": "..."}, {...}, {...}], "hooks": ["...", "...", "...", "...", "..."], "send_to": "...", "comment_question": "...", "teaser": "..."}"""
 
 EDITOR_DE = """Du bist die Schlussredaktion eines Humor-Kanals auf Instagram. Prüfe streng.
-1. Sicherheit: Verwirf jeden Witz, der Gruppen herabsetzt (Herkunft, Religion, Geschlecht, Sexualität, Behinderung, Aussehen, Alter), Tod, Gewalt, Krankheit, Unglücke oder Straftaten betrifft, Privatpersonen zeigt, parteipolitisch austeilt oder Tatsachen über reale Personen oder Firmen erfindet.
+1. Sicherheit: Verwirf jeden Witz, der Gruppen herabsetzt (Herkunft, Religion, Geschlecht, Sexualität, Behinderung, Aussehen, Alter), Tod, Gewalt, Krankheit, Unglücke oder Straftaten betrifft, Privatpersonen zeigt, parteipolitisch austeilt oder Tatsachen über reale Personen oder Firmen erfindet. Redewendungen sind erlaubt ("begraben", "totlachen", "hundemüde", "den Abend killen"): Verwirf einen Witz nur, wenn es tatsächlich um echten Tod, Gewalt, Krankheit, Unglücke oder Straftaten geht.
 2. Bewerte jeden verbleibenden Witz von 1 bis 10 nach dieser Skala, und sei geizig:
    - 9–10: Late-Night-Niveau, die Wendung ist überraschend und zugleich zwingend.
    - 8: Man würde ihn tatsächlich einem Freund schicken.
@@ -259,7 +295,13 @@ Deliver:
 - 5 joke variants in the given format, each taking a genuinely different angle: "setup" max 18 words, "punchline" max 14 words. The headline is already shown at the top of the video: the setup does not repeat it word for word, it leads straight into the joke without giving away the punchline.
 - The punchline must hinge on a specific, concrete detail of this headline (a number, a name, an odd fact, the exact claim). If the punchline would work just as well under a different headline, it is not good enough.
 - No fallback punchlines: no pets, spouses, mothers-in-law, "my boss" or "my ex" unless the headline itself is about them. No stock openers like "Great, now…", "Finally…", "Plot twist:", "Me:". No jokes that only say "I'm lazy" or "I'm broke".
-- 5 hook variants, max 8 words each. A hook stops the scroll in the first second: provocative or counterintuitive, makes people curious about the punchline without revealing it. Patterns: counterintuitive claim ("This headline is funnier than any joke"), open loop ("My boss cannot see this"), direct address ("If you're single, don't scroll").
+- 5 hook variants, max 8 words each. A hook stops the scroll in the first second: provocative or counterintuitive, makes people curious about the punchline without revealing it. Use statements, not questions; at most one of the five may be a question. Each hook uses a different pattern:
+  1. bold claim ("This is the most honest thing Netflix ever said")
+  2. surprising number or detail from the headline ("144 times a day. Per person.")
+  3. open loop ("Read this before your next meeting")
+  4. direct address to a specific person ("If you own a smart fridge, sit down")
+  5. deadpan understatement ("Normal Tuesday at Nvidia")
+  Avoid bland openers like "Ever wonder…", "Did you know…", "Guess what…".
 - "send_to": continuation of "Send this to ...", starts with "someone who" or "your", concrete and recognisable, max 9 words.
 - "comment_question": short, easy-to-answer question for the comments (yes/no, team A or B, a number).
 - "teaser": first line of the caption, max 10 words, no punchline.
@@ -269,7 +311,7 @@ Reply with JSON only:
 {"choice": <headline number or 0 if none works>, "jokes": [{"setup": "...", "punchline": "..."}, {...}, {...}], "hooks": ["...", "...", "...", "...", "..."], "send_to": "...", "comment_question": "...", "teaser": "..."}"""
 
 EDITOR_EN = """You are the final editor of a deadpan humor account on Instagram. Be strict.
-1. Safety: discard any joke that demeans groups (origin, religion, gender, sexuality, disability, looks, age), touches death, violence, illness, disasters or crime, features private individuals, takes partisan political shots or invents facts about real people or companies.
+1. Safety: discard any joke that demeans groups (origin, religion, gender, sexuality, disability, looks, age), touches death, violence, illness, disasters or crime, features private individuals, takes partisan political shots or invents facts about real people or companies. Figures of speech are fine ("bury", "kill it", "dead tired", "murder a playlist"): only discard a joke when the actual subject is real death, violence, illness, disaster or crime.
 2. Score every remaining joke from 1 to 10 with this scale, and be stingy:
    - 9–10: late-night monologue quality, the twist is surprising and inevitable at once.
    - 8: you would actually forward it to a friend.
