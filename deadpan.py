@@ -154,26 +154,30 @@ def llm(system, user):
     last = ""
     key = os.environ.get("GEMINI_API_KEY", "").strip()
     for model in (CFG.get("gemini_models", []) if key else []):
-        try:
-            r = requests.post(
-                f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
-                headers={"x-goog-api-key": key},
-                json={
-                    "systemInstruction": {"parts": [{"text": system}]},
-                    "contents": [{"role": "user", "parts": [{"text": user}]}],
-                    "generationConfig": {"temperature": 1.0, "responseMimeType": "application/json",
-                                         "maxOutputTokens": 8192},
-                },
-                timeout=240,
-            )
-            if r.status_code == 200:
-                result = parse_json(gemini_text(r.json()))
-                print(f"(Textmodell: {model})")
-                return result
-            last = f"{model}: HTTP {r.status_code} {r.text[:300]}"
-        except (requests.RequestException, ValueError, KeyError, IndexError) as exc:
-            last = f"{model}: {exc}"
-        print(f"Gemini-Modell nicht nutzbar ({last}), versuche das nächste.")
+        for attempt in range(3):           # bei Überlastung (429/503) kurz warten und erneut versuchen
+            try:
+                r = requests.post(
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+                    headers={"x-goog-api-key": key},
+                    json={
+                        "systemInstruction": {"parts": [{"text": system}]},
+                        "contents": [{"role": "user", "parts": [{"text": user}]}],
+                        "generationConfig": {"temperature": 1.0, "responseMimeType": "application/json",
+                                             "maxOutputTokens": 8192},
+                    },
+                    timeout=120,
+                )
+                if r.status_code == 200:
+                    result = parse_json(gemini_text(r.json()))
+                    print(f"(Textmodell: {model})")
+                    return result
+                last = f"{model}: HTTP {r.status_code} {r.text[:200]}"
+                if r.status_code not in (429, 500, 503):
+                    break                       # z. B. 404: Modell nicht verfügbar, nächstes probieren
+            except (requests.RequestException, ValueError, KeyError, IndexError) as exc:
+                last = f"{model}: {exc}"
+            time.sleep(15 * (attempt + 1))
+        print(f"Gemini-Modell nicht nutzbar ({' '.join(last.split())[:160]}), versuche das nächste.")
     for model in (CFG["text_model"], CFG.get("fallback_text_model")):
         if not model:
             continue

@@ -129,9 +129,9 @@
     "mordfall"
   ],
   "gemini_models": [
+    "gemini-3.8-flash",
     "gemini-flash-latest",
-    "gemini-3.6-flash",
-    "gemini-2.5-flash"
+    "gemini-3.6-flash"
   ],
   "text_model": "@cf/openai/gpt-oss-120b",
   "fallback_text_model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
