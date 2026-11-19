@@ -150,11 +150,15 @@ def gemini_text(data):
     return "".join(p.get("text", "") for p in parts if not p.get("thought"))
 
 
+GEMINI_DOWN = False   # einmal komplett gescheitert -> für den Rest des Laufs direkt Cloudflare
+
+
 def llm(system, user):
+    global GEMINI_DOWN
     last = ""
-    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    key = "" if GEMINI_DOWN else os.environ.get("GEMINI_API_KEY", "").strip()
     for model in (CFG.get("gemini_models", []) if key else []):
-        for attempt in range(3):           # bei Überlastung (429/503) kurz warten und erneut versuchen
+        for attempt in range(2):           # bei Überlastung (429/503) kurz warten und erneut versuchen
             try:
                 r = requests.post(
                     f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
@@ -165,7 +169,7 @@ def llm(system, user):
                         "generationConfig": {"temperature": 1.0, "responseMimeType": "application/json",
                                              "maxOutputTokens": 8192},
                     },
-                    timeout=120,
+                    timeout=90,
                 )
                 if r.status_code == 200:
                     result = parse_json(gemini_text(r.json()))
@@ -176,8 +180,11 @@ def llm(system, user):
                     break                       # z. B. 404: Modell nicht verfügbar, nächstes probieren
             except (requests.RequestException, ValueError, KeyError, IndexError) as exc:
                 last = f"{model}: {exc}"
-            time.sleep(15 * (attempt + 1))
+            time.sleep(10)
         print(f"Gemini-Modell nicht nutzbar ({' '.join(last.split())[:160]}), versuche das nächste.")
+    if key:
+        GEMINI_DOWN = True
+        print("Gemini derzeit nicht erreichbar, dieser Lauf nutzt Cloudflare.")
     for model in (CFG["text_model"], CFG.get("fallback_text_model")):
         if not model:
             continue
