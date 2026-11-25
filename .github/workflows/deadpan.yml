@@ -2,8 +2,8 @@ name: Deadpan Desk
 
 on:
   schedule:
-    - cron: "17 17 * * *"   # täglich 17:17 UTC (18:17 Uhr MEZ): Reel
-    - cron: "23 9 * * 0"    # sonntags 09:23 UTC (10:23 Uhr MEZ): Wochen-Karussell
+    - cron: "17 12 * * *"   # täglich 12:17 UTC (7:17 Uhr US-Ostküste, 13:17 Uhr MEZ): Reel
+    - cron: "23 14 * * 0"   # sonntags 14:23 UTC (9:23 Uhr US-Ostküste, 15:23 Uhr MEZ): Wochen-Karussell
   workflow_dispatch:
     inputs:
       modus:
@@ -35,7 +35,7 @@ env:
   CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
   IG_USER_ID: ${{ secrets.IG_USER_ID }}
   IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-  MODUS: ${{ github.event_name == 'schedule' && (github.event.schedule == '23 9 * * 0' && 'wochenrueckblick' || 'posten') || inputs.modus }}
+  MODUS: ${{ github.event_name == 'schedule' && (github.event.schedule == '23 14 * * 0' && 'wochenrueckblick' || 'posten') || inputs.modus }}
 
 jobs:
   run:
