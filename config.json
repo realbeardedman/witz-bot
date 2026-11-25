@@ -1,6 +1,6 @@
 {
   "language": "en",
-  "handle": "@deadpan.desk",
+  "handle": "@citation.needed.daily",
   "feed": {
     "hl": "en-US",
     "gl": "US",
@@ -166,7 +166,7 @@
     "min_punchline_seconds": 2.8,
     "cta_seconds": 2.0
   },
-  "audio_name": "Deadpan Desk",
+  "audio_name": "Citation Needed",
   "music_volume": 0.35,
   "upload_mode": "resumable",
   "graph_host": "graph.facebook.com",
