@@ -50,28 +50,28 @@
   ],
   "formats": [
     {
-      "name": "Headline joke",
-      "instruction": "Classic topical joke: the setup takes the headline somewhere expected, the punchline twists it."
+      "name": "Wrong speaker",
+      "instruction": "A well-known quote, unchanged, pinned on a speaker taken from the headline (object, product, number or concept). The speaker makes the quote suddenly describe today's news."
     },
     {
-      "name": "Honest headline",
-      "instruction": "Setup: the official version of the story, sharpened to 12 words max, starting with 'Officially:'. Punchline: the honest version, what it actually means for normal people, starting with 'Honestly:'."
+      "name": "Time traveller",
+      "instruction": "A modern line that fits today's headline (customer-service phrase, app notification, corporate jargon, ad slogan), attributed to a historical figure who died before 1950, as if they said it in their own era."
     },
     {
-      "name": "Relatable",
-      "instruction": "Setup connects the headline to an everyday situation almost everyone knows (office, family, roommates, relationships). Punchline is the exaggerated, recognisable reaction."
+      "name": "Twisted classic",
+      "instruction": "A famous quote with one or two words changed so it fits the headline, attributed to an object or concept from the headline."
     }
   ],
   "always_hashtags": [
+    "#quotes",
     "#deadpan",
-    "#headlines",
     "#humor"
   ],
   "weekly_hashtags": [
+    "#quotes",
+    "#misattributed",
     "#deadpan",
-    "#headlines",
     "#humor",
-    "#jokes",
     "#weeklyrecap"
   ],
   "disclosure": "",
@@ -170,5 +170,6 @@
   "music_volume": 0.35,
   "upload_mode": "resumable",
   "graph_host": "graph.facebook.com",
-  "graph_api_version": "v25.0"
+  "graph_api_version": "v25.0",
+  "quote_style": true
 }

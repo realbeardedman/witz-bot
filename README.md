@@ -1,5 +1,12 @@
 # Deadpan Desk
 
+**Format (seit 25.11.2026):** Jeden Tag ein falsch zugeschriebenes Zitat zur Nachricht des Tages.
+Ein bekanntes Zitat wird todernst dem falschen Urheber zugeschrieben – einem Gegenstand, Produkt oder
+Begriff aus der Schlagzeile oder einer historischen Person (gestorben vor 1950). Lebende Personen,
+Politiker und Unternehmen als Sprecher sind ausgeschlossen. Ablauf im Reel: Hook → Zitat mit
+„Who said it?“ → Auflösung des Urhebers → „Send this to …“. Formate: Wrong speaker, Time traveller,
+Twisted classic.
+
 Holt jeden Tag eine aktuelle Schlagzeile (Google News, US-Ausgabe), schreibt einen trockenen englischen Witz dazu, rendert daraus ein
 Text-Reel (9:16, ca. 10–15 Sekunden) und veröffentlicht es auf Instagram. Keine KI-Bilder, keine
 Personen, nur Typografie. Läuft kostenlos über GitHub Actions und das Freikontingent von

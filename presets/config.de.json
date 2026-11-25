@@ -50,29 +50,29 @@
   ],
   "formats": [
     {
-      "name": "Witz zur Schlagzeile",
-      "instruction": "Klassischer Witz: Setup greift die Schlagzeile auf und baut eine Erwartung auf, die Pointe bricht sie überraschend."
+      "name": "Falscher Urheber",
+      "instruction": "Ein bekanntes Zitat, unverändert, einem Urheber aus der Schlagzeile zugeschrieben (Gegenstand, Produkt, Zahl oder Begriff). Der Urheber lässt das Zitat plötzlich die heutige Nachricht beschreiben."
     },
     {
-      "name": "Ehrliche Schlagzeile",
-      "instruction": "Setup: die offizielle Lesart der Meldung, zugespitzt in höchstens 12 Wörtern (beginnt mit 'Offiziell:'). Pointe: die 'ehrliche Version', also was das im echten Leben für normale Menschen bedeutet (beginnt mit 'Ehrlich:')."
+      "name": "Zeitreisender",
+      "instruction": "Ein moderner Satz, der zur Schlagzeile passt (Kundenservice-Floskel, App-Benachrichtigung, Konzernsprech, Werbeslogan), einer historischen Person zugeschrieben, die vor 1950 gestorben ist, als hätte sie ihn zu ihrer Zeit gesagt."
     },
     {
-      "name": "Wer kennt's",
-      "instruction": "Setup verbindet die Schlagzeile mit einer Alltagssituation, die fast jeder kennt (Büro, Familie, WG, Beziehung). Die Pointe ist die überspitzte, wiedererkennbare Reaktion darauf."
+      "name": "Verdrehter Klassiker",
+      "instruction": "Ein berühmtes Zitat mit ein, zwei geänderten Wörtern, damit es zur Schlagzeile passt, einem Gegenstand oder Begriff aus der Schlagzeile zugeschrieben."
     }
   ],
   "always_hashtags": [
-    "#witzdestages",
+    "#zitate",
     "#humor",
     "#nachrichten"
   ],
   "weekly_hashtags": [
-    "#witzdestages",
+    "#zitate",
+    "#falschzitat",
     "#humor",
-    "#wochenrückblick",
     "#witze",
-    "#lustig"
+    "#wochenrückblick"
   ],
   "disclosure": "",
   "max_article_age_hours": 48,
@@ -155,5 +155,6 @@
   "audio_name": "Witz des Tages",
   "music_volume": 0.35,
   "upload_mode": "resumable",
-  "graph_api_version": "v25.0"
+  "graph_api_version": "v25.0",
+  "quote_style": true
 }

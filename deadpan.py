@@ -47,25 +47,27 @@ MEDIA = ROOT / "media"
 LANG = CFG.get("language", "de")
 TEXTS = {
     "de": {
-        "label": "NEWS DES TAGES", "source": "Quelle", "loading": "Pointe kommt …", "send": "Schick das",
+        "label": "NEWS DES TAGES", "source": "Quelle", "loading": "Wer hat's gesagt?", "send": "Schick das",
+        "quote_note": "(Zitat absichtlich falsch zugeschrieben. Offensichtlich.)",
         "default_send": "jemandem, der heute ein Lachen braucht", "default_question": "Wie seht ihr das?",
-        "weekly_label": "WITZE DER WOCHE", "weekly_title": "Die {n} besten Witze der Woche",
+        "weekly_label": "ZITATE DER WOCHE", "weekly_title": "Die {n} besten falschen Zitate der Woche",
         "weekly_sub": "Aus den Nachrichten dieser Woche, von Platz {n} bis 1", "swipe": "Wisch nach links  →",
         "rank": "PLATZ {rank}", "end_label": "UND JETZT DU", "end_title": "Welcher war dein Favorit?",
-        "end_sub": "Schreib die Nummer in die Kommentare.", "follow": "Folge {handle} für jeden Tag einen Witz",
-        "weekly_caption": "Die {n} besten Witze dieser Woche, von Platz {n} bis 1.\n\n"
+        "end_sub": "Schreib die Nummer in die Kommentare.", "follow": "Folge {handle} für jeden Tag ein falsches Zitat",
+        "weekly_caption": "Die {n} besten falschen Zitate dieser Woche, von Platz {n} bis 1.\n\n"
                           "Welcher ist dein Favorit? Schreib die Nummer in die Kommentare.\n"
                           "📩 Schick das jemandem, der diese Woche ein Lachen verdient hat.",
         "date": "%d.%m.",
     },
     "en": {
-        "label": "TODAY'S HEADLINE", "source": "Source", "loading": "Punchline loading …", "send": "Send this to",
+        "label": "TODAY'S HEADLINE", "source": "Source", "loading": "Who said it?", "send": "Send this to",
+        "quote_note": "(Quote misattributed on purpose. Obviously.)",
         "default_send": "someone who needs a laugh today", "default_question": "Agree or disagree?",
-        "weekly_label": "JOKES OF THE WEEK", "weekly_title": "The {n} best jokes of the week",
+        "weekly_label": "QUOTES OF THE WEEK", "weekly_title": "The {n} best misattributed quotes of the week",
         "weekly_sub": "From this week's headlines, counting down from #{n} to #1", "swipe": "Swipe left  →",
         "rank": "NUMBER {rank}", "end_label": "YOUR TURN", "end_title": "Which one was your favorite?",
-        "end_sub": "Drop the number in the comments.", "follow": "Follow {handle} for one joke a day",
-        "weekly_caption": "The {n} best jokes of the week, counting down from #{n} to #1.\n\n"
+        "end_sub": "Drop the number in the comments.", "follow": "Follow {handle} for one misattributed quote a day",
+        "weekly_caption": "The {n} best misattributed quotes of the week, counting down from #{n} to #1.\n\n"
                           "Which one's your favorite? Drop the number in the comments.\n"
                           "📩 Send this to someone who earned a laugh this week.",
         "date": "%b %-d",
@@ -256,92 +258,95 @@ def fetch_candidates(topic, seen):
 
 # ------------------------------------------------------------------- Texte
 
-AUTHOR_DE = """Du schreibst für einen deutschsprachigen Instagram-Kanal, der jeden Tag einen kurzen Witz zu einer aktuellen Schlagzeile als Reel zeigt. Ziel: Menschen lachen und schicken das Reel einer bestimmten Person weiter.
+AUTHOR_DE = """Du schreibst für einen Instagram-Kanal, der jeden Tag ein falsch zugeschriebenes Zitat zu einer echten, aktuellen Schlagzeile als Reel zeigt. Der Witz liegt im Abstand zwischen dem, der es angeblich gesagt hat, und dem, was es heute bedeutet: ein bekanntes Zitat, todernst dem falschen Urheber zugeschrieben.
 
 Du bekommst ein Format und nummerierte Schlagzeilen. Wähle die Schlagzeile mit dem größten Witzpotenzial für ein breites Publikum.
 
-Humor: kurz, alltagsnah, überraschend, eher frech als böse. Gute Pointen sind konkret (Situationen und Typen wie Chef, Mama, Ex, Kollegin, Vermieter) statt abstrakt. Wortspiele nur, wenn sie wirklich sitzen.
+So funktioniert es: Man liest zuerst das Zitat, fragt sich, wer es gesagt hat, und sieht dann den Urheber. Die Auflösung des Urhebers ist die Pointe. Das Zitat ergibt für sich allein Sinn; erst der Urheber lässt es plötzlich auf die Schlagzeile passen.
 
-Tabu: Witze auf Kosten von Gruppen (Herkunft, Religion, Geschlecht, Sexualität, Behinderung, Aussehen, Alter); Tod, Gewalt, Krankheit, Unglücke, Straftaten; Privatpersonen; parteipolitische Seitenhiebe; erfundene Tatsachen über reale Personen oder Firmen. Fakten nur aus der Schlagzeile, der Witz darf offensichtlich übertreiben.
+Regeln für den Urheber (streng):
+- Erlaubt: (a) ein Gegenstand, Produkt, Tier, eine Zahl, ein Ort oder ein Begriff aus der Schlagzeile ("der Leitzins der EZB", "eine Black-Friday-Heißluftfritteuse", "das letzte iPad auf Lager"); (b) eine historische Person, die vor 1950 gestorben ist, offensichtlich anachronistisch.
+- Niemals eine lebende Person, niemals jemand, der nach 1950 gestorben ist, niemals ein Unternehmen oder eine Organisation, die als sie selbst spricht (ihre Produkte und Dinge sind erlaubt), niemals Politiker.
+- Ein kurzer Zusatz beim Urheber ist erlaubt, wenn er den Witz schärft: "der Leitzins, Dezember 2026", "Julius Cäsar, an seinem dritten Black Friday".
+
+Regeln für das Zitat:
+- Ein Zitat, Sprichwort oder berühmter Satz, den ein breites Publikum sofort erkennt (Klassiker, Philosophie, berühmte Reden vor 1950, Sprichwörter, legendäre Filmsätze), oder ein bekannter Satz, leicht abgewandelt. Höchstens 22 Wörter.
+- Keine Songtexte, keine Gedichte, keine langen Passagen.
+- Fakten nur aus der Schlagzeile; Übertreibung darf offensichtlich sein.
+
+Tabu: Witze auf Kosten von Gruppen (Herkunft, Religion, Geschlecht, Sexualität, Behinderung, Aussehen, Alter); echter Tod, Gewalt, Krankheit, Unglücke, Straftaten; Privatpersonen; Parteipolitik. Redewendungen sind erlaubt.
 
 Liefere:
-- 5 Witz-Varianten im vorgegebenen Format, jede aus einem wirklich anderen Blickwinkel: "setup" höchstens 18 Wörter, "punchline" höchstens 14 Wörter. Die Schlagzeile steht bereits oben im Video: das Setup wiederholt sie nicht wörtlich, sondern führt direkt zum Witz hin und verrät die Pointe nicht.
-- Die Pointe muss an einem konkreten Detail dieser Schlagzeile hängen (eine Zahl, ein Name, eine kuriose Tatsache, die genaue Behauptung). Würde die Pointe genauso unter einer anderen Schlagzeile funktionieren, ist sie nicht gut genug.
-- Keine Ausweichpointen: keine Haustiere, Ehepartner, Schwiegermütter, "mein Chef" oder "mein Ex", außer die Schlagzeile handelt davon. Keine Standard-Einstiege wie "Na toll, jetzt…", "Endlich…", "Plot Twist:". Keine Witze, die nur sagen "ich bin faul" oder "ich bin pleite".
-- 5 Hook-Varianten, je höchstens 8 Wörter. Ein Hook stoppt das Scrollen in der ersten Sekunde: provokant oder kontraintuitiv, macht neugierig auf die Pointe, verrät sie aber nicht. Aussagen statt Fragen; höchstens einer der fünf darf eine Frage sein. Jeder Hook nutzt ein anderes Muster:
-  1. steile Behauptung ("Das Ehrlichste, was Netflix je gesagt hat")
-  2. überraschende Zahl oder Detail aus der Schlagzeile ("144-mal am Tag. Pro Person.")
-  3. offene Spannung ("Lies das vor deinem nächsten Meeting")
-  4. direkte Ansprache an einen bestimmten Typ ("Wenn du einen smarten Kühlschrank hast: hinsetzen")
-  5. trockenes Understatement ("Ganz normaler Dienstag bei Nvidia")
-  Keine braven Einstiege wie "Schon mal gefragt…", "Wusstest du…", "Rate mal…".
-- "send_to": Fortsetzung von "Schick das ...", beginnt mit "jemandem, der" oder "deinem"/"deiner", konkret und wiedererkennbar, höchstens 9 Wörter.
-- "comment_question": kurze, leicht zu beantwortende Frage an die Community (Ja/Nein, Team A oder B, eine Zahl).
-- "teaser": erste Zeile der Caption, höchstens 10 Wörter, ohne die Pointe.
+- 5 Varianten im vorgegebenen Format, jede mit einem anderen Zitat: "quote" (ohne Anführungszeichen), "speaker" (höchstens 12 Wörter, ohne Gedankenstrich), "real_source" (wer es wirklich gesagt hat oder woher es stammt; "abgewandelt", wenn du es verändert hast; "erfunden", wenn es ein neuer Satz ist).
+- 5 Hook-Varianten, je höchstens 8 Wörter, Aussagen statt Fragen, ohne den Urheber zu verraten. Jeder Hook nutzt ein anderes Muster: steile Behauptung ("Die weisesten Worte zum Black Friday"), überraschendes Detail aus der Schlagzeile, offene Spannung ("Rate mal, wer das gesagt hat"), direkte Ansprache an einen bestimmten Typ, trockenes Understatement.
+- "send_to": Fortsetzung von "Schick das ...", beginnt mit "jemandem, der" oder "deinem"/"deiner", konkret, höchstens 9 Wörter.
+- "comment_question": kurze, leicht zu beantwortende Frage an die Community.
+- "teaser": erste Zeile der Caption, höchstens 10 Wörter, verrät den Urheber nicht.
 Keine Emojis, keine Hashtags.
 
 Antworte ausschließlich mit JSON:
-{"choice": <Nummer der Schlagzeile oder 0, wenn keine taugt>, "jokes": [{"setup": "...", "punchline": "..."}, {...}, {...}], "hooks": ["...", "...", "...", "...", "..."], "send_to": "...", "comment_question": "...", "teaser": "..."}"""
+{"choice": <Nummer der Schlagzeile oder 0>, "quotes": [{"quote": "...", "speaker": "...", "real_source": "..."}, ...], "hooks": ["...", "...", "...", "...", "..."], "send_to": "...", "comment_question": "...", "teaser": "..."}"""
 
-EDITOR_DE = """Du bist die Schlussredaktion eines Humor-Kanals auf Instagram. Prüfe streng.
-1. Sicherheit: Verwirf jeden Witz, der Gruppen herabsetzt (Herkunft, Religion, Geschlecht, Sexualität, Behinderung, Aussehen, Alter), Tod, Gewalt, Krankheit, Unglücke oder Straftaten betrifft, Privatpersonen zeigt, parteipolitisch austeilt oder Tatsachen über reale Personen oder Firmen erfindet. Redewendungen sind erlaubt ("begraben", "totlachen", "hundemüde", "den Abend killen"): Verwirf einen Witz nur, wenn es tatsächlich um echten Tod, Gewalt, Krankheit, Unglücke oder Straftaten geht.
-2. Bewerte jeden verbleibenden Witz von 1 bis 10 nach dieser Skala, und sei geizig:
-   - 9–10: Late-Night-Niveau, die Wendung ist überraschend und zugleich zwingend.
-   - 8: Man würde ihn tatsächlich einem Freund schicken.
-   - 6–7: solide, aber schnell vergessen.
-   - 5 oder weniger: beliebig, vorhersehbar, oder die Pointe passt zu jeder anderen Schlagzeile.
-   Hängt die Pointe nicht an einem konkreten Detail der Schlagzeile, gibt es höchstens 5 Punkte. Standard-Einstiege ("Na toll, jetzt…", "Endlich…") und Ausweichziele (Haustiere, Ehepartner, allgemeine Faulheit) bekommen höchstens 5 Punkte.
-   Wähle den Witz mit der höchsten Punktzahl.
-3. Wähle den stärksten Hook, der zum Witz passt und die Pointe nicht verrät.
-4. Kürze und schärfe, ohne den Witz zu verändern: Hook höchstens 8 Wörter, Setup höchstens 18 Wörter (wiederholt die Schlagzeile nicht wörtlich), Pointe höchstens 14 Wörter, "send_to" höchstens 9 Wörter. Keine Emojis, keine Hashtags.
-Setze "ok" auf false, wenn kein Witz die Sicherheitsprüfung besteht oder der beste unter 8 Punkten liegt.
+EDITOR_DE = """Du bist die Schlussredaktion eines Instagram-Kanals, der jeden Tag ein falsch zugeschriebenes Zitat zu einer echten Schlagzeile zeigt. Prüfe streng.
+1. Sicherheit: Verwirf jede Variante, deren Urheber eine lebende Person ist, nach 1950 gestorben ist, ein Politiker ist oder ein Unternehmen bzw. eine Organisation, die als sie selbst spricht; die Gruppen herabsetzt; echten Tod, Gewalt, Krankheit, Unglücke oder Straftaten betrifft; Privatpersonen zeigt; parteipolitisch austeilt; oder Songtexte bzw. Gedichte verwendet. Redewendungen sind erlaubt.
+2. Bewerte jede verbleibende Variante von 1 bis 10, und sei geizig:
+   - 9–10: Die Auflösung des Urhebers gibt dem Zitat sofort und perfekt einen neuen Sinn.
+   - 8: Man würde es tatsächlich weiterschicken.
+   - 6–7: clever, aber flach.
+   - 5 oder weniger: Das Zitat ist nicht allgemein bekannt, der Urheber hängt nicht an einem konkreten Detail der Schlagzeile, oder das Zitat passt zu jeder Schlagzeile.
+   Wähle die Variante mit der höchsten Punktzahl.
+3. Wähle den stärksten Hook, der den Urheber nicht verrät.
+4. Kürze und schärfe: Zitat höchstens 22 Wörter (ohne Anführungszeichen), Urheber höchstens 12 Wörter (ohne Gedankenstrich), Hook höchstens 8 Wörter, "send_to" höchstens 9 Wörter. Keine Emojis, keine Hashtags.
+Setze "ok" auf false, wenn keine Variante die Sicherheitsprüfung besteht oder die beste unter 8 Punkten liegt.
 
-Antworte ausschließlich mit JSON:
-{"ok": true, "score": 8, "scores": [5, 8, 6, 0, 7], "reason": "...", "hook": "...", "setup": "...", "punchline": "...", "send_to": "..."}"""
+Antworte ausschließlich mit JSON ("scores" in der Reihenfolge der Varianten, 0 für verworfene):
+{"ok": true, "score": 8, "scores": [5, 8, 6, 0, 7], "reason": "...", "hook": "...", "quote": "...", "speaker": "...", "send_to": "..."}"""
 
 
-AUTHOR_EN = """You write for an English-language Instagram account called Deadpan Desk that posts one short joke a day about a real, current headline, as a Reel. Goal: people laugh and send the Reel to one specific person.
+AUTHOR_EN = """You write for an English-language Instagram account called Deadpan Desk. Every day it posts one misattributed quote about a real, current headline, as a Reel. The joke is the gap between who supposedly said it and what it means today: a famous quote, pinned on the wrong speaker with a perfectly straight face.
 
 You get a format and numbered headlines. Pick the headline with the most comedic potential for a broad international audience.
 
-Tone: deadpan. Dry, understated, observational, delivered with a straight face. Short and concrete (bosses, landlords, exes, group chats, Mondays) rather than abstract. Puns only if they genuinely land. Think late-night monologue joke, not meme caption.
+How it works: the viewer reads the quote first, wonders who said it, then sees the speaker. The speaker reveal is the punchline. The quote makes sense on its own; only the speaker makes it suddenly fit today's headline.
 
-Off-limits: jokes at the expense of groups (origin, religion, gender, sexuality, disability, looks, age); death, violence, illness, disasters, crime; private individuals; partisan politics; invented facts about real people or companies. Use only facts from the headline; the joke may exaggerate obviously.
+Speaker rules (strict):
+- Allowed: (a) an object, product, animal, number, place or concept taken from the headline ("the Fed's interest rate", "a Black Friday air fryer", "Nvidia's missing SEC report", "the last iPad in stock"); (b) a historical figure who died before 1950, in an obviously anachronistic way.
+- Never a living person. Never anyone who died after 1950. Never a company, brand or organisation speaking as itself (its products and things are fine). Never a politician.
+- A short tag on the speaker is welcome when it sharpens the joke: "the Fed's interest rate, December 2026", "Julius Caesar, on his third Black Friday".
+
+Quote rules:
+- A quote, proverb or famous line that a broad international audience recognises instantly (classic literature, philosophy, famous speeches before 1950, proverbs, iconic movie lines), or a recognisable line slightly twisted to fit the headline. Max 22 words.
+- No song lyrics, no poems, no long passages.
+- Facts only from the headline; exaggeration must be obvious.
+
+Off-limits: jokes at the expense of groups (origin, religion, gender, sexuality, disability, looks, age); real death, violence, illness, disasters or crime; private individuals; partisan politics. Figures of speech are fine.
 
 Deliver:
-- 5 joke variants in the given format, each taking a genuinely different angle: "setup" max 18 words, "punchline" max 14 words. The headline is already shown at the top of the video: the setup does not repeat it word for word, it leads straight into the joke without giving away the punchline.
-- The punchline must hinge on a specific, concrete detail of this headline (a number, a name, an odd fact, the exact claim). If the punchline would work just as well under a different headline, it is not good enough.
-- No fallback punchlines: no pets, spouses, mothers-in-law, "my boss" or "my ex" unless the headline itself is about them. No stock openers like "Great, now…", "Finally…", "Plot twist:", "Me:". No jokes that only say "I'm lazy" or "I'm broke".
-- 5 hook variants, max 8 words each. A hook stops the scroll in the first second: provocative or counterintuitive, makes people curious about the punchline without revealing it. Use statements, not questions; at most one of the five may be a question. Each hook uses a different pattern:
-  1. bold claim ("This is the most honest thing Netflix ever said")
-  2. surprising number or detail from the headline ("144 times a day. Per person.")
-  3. open loop ("Read this before your next meeting")
-  4. direct address to a specific person ("If you own a smart fridge, sit down")
-  5. deadpan understatement ("Normal Tuesday at Nvidia")
-  Avoid bland openers like "Ever wonder…", "Did you know…", "Guess what…".
-- "send_to": continuation of "Send this to ...", starts with "someone who" or "your", concrete and recognisable, max 9 words.
-- "comment_question": short, easy-to-answer question for the comments (yes/no, team A or B, a number).
-- "teaser": first line of the caption, max 10 words, no punchline.
+- 5 variants in the given format, each with a different quote: "quote" (no quotation marks), "speaker" (max 12 words, no dash), "real_source" (who really said it or where it comes from; "twisted" if you changed it; "invented" if it is a new line).
+- 5 hook variants, max 8 words each, statements rather than questions, never revealing the speaker. Each uses a different pattern: bold claim ("The wisest words of Black Friday"), surprising detail from the headline, open loop ("You won't guess who said this"), direct address to a specific person, deadpan understatement.
+- "send_to": continuation of "Send this to ...", starts with "someone who" or "your", concrete, max 9 words.
+- "comment_question": short, easy-to-answer question for the comments.
+- "teaser": first line of the caption, max 10 words, never revealing the speaker.
 No emojis, no hashtags. American English spelling.
 
 Reply with JSON only:
-{"choice": <headline number or 0 if none works>, "jokes": [{"setup": "...", "punchline": "..."}, {...}, {...}], "hooks": ["...", "...", "...", "...", "..."], "send_to": "...", "comment_question": "...", "teaser": "..."}"""
+{"choice": <headline number or 0>, "quotes": [{"quote": "...", "speaker": "...", "real_source": "..."}, ...], "hooks": ["...", "...", "...", "...", "..."], "send_to": "...", "comment_question": "...", "teaser": "..."}"""
 
-EDITOR_EN = """You are the final editor of a deadpan humor account on Instagram. Be strict.
-1. Safety: discard any joke that demeans groups (origin, religion, gender, sexuality, disability, looks, age), touches death, violence, illness, disasters or crime, features private individuals, takes partisan political shots or invents facts about real people or companies. Figures of speech are fine ("bury", "kill it", "dead tired", "murder a playlist"): only discard a joke when the actual subject is real death, violence, illness, disaster or crime.
-2. Score every remaining joke from 1 to 10 with this scale, and be stingy:
-   - 9–10: late-night monologue quality, the twist is surprising and inevitable at once.
-   - 8: you would actually forward it to a friend.
-   - 6–7: competent but forgettable.
-   - 5 or lower: generic, predictable, or the punchline would fit any other headline.
-   A joke whose punchline does not depend on a concrete detail of the headline scores 5 at most. Stock openers ("Great, now…", "Finally…") and fallback targets (pets, spouses, generic laziness) score 5 at most.
-   Pick the highest-scoring joke.
-3. Pick the strongest hook that fits the joke and does not give away the punchline.
-4. Tighten without changing the joke: hook max 8 words, setup max 18 words (does not repeat the headline word for word), punchline max 14 words, "send_to" max 9 words. No emojis, no hashtags.
-Set "ok" to false if no joke passes the safety check or the best one scores below 8.
+EDITOR_EN = """You are the final editor of Deadpan Desk, an Instagram account that posts one misattributed quote a day about a real headline. Be strict.
+1. Safety: discard any variant whose speaker is a living person, died after 1950, is a politician, or is a company or organisation speaking as itself; that demeans groups; touches real death, violence, illness, disasters or crime; features private individuals; takes partisan shots; or uses song lyrics or poems. Figures of speech are fine.
+2. Score every remaining variant from 1 to 10, and be stingy:
+   - 9–10: the speaker reveal gives the quote a new meaning instantly and perfectly.
+   - 8: you would actually forward it.
+   - 6–7: clever but flat.
+   - 5 or lower: the quote is not widely known, the speaker does not hinge on a concrete detail of the headline, or the quote would fit any headline.
+   Pick the highest-scoring variant.
+3. Pick the strongest hook that does not reveal the speaker.
+4. Tighten: quote max 22 words (no quotation marks), speaker max 12 words (no dash), hook max 8 words, "send_to" max 9 words. No emojis, no hashtags.
+Set "ok" to false if nothing passes the safety check or the best variant scores below 8.
 
-Reply with JSON only ("scores" lists the score of each joke in the given order, 0 for discarded ones):
-{"ok": true, "score": 8, "scores": [5, 8, 6, 0, 7], "reason": "...", "hook": "...", "setup": "...", "punchline": "...", "send_to": "..."}"""
+Reply with JSON only ("scores" in the order of the variants, 0 for discarded ones):
+{"ok": true, "score": 8, "scores": [5, 8, 6, 0, 7], "reason": "...", "hook": "...", "quote": "...", "speaker": "...", "send_to": "..."}"""
+
 
 AUTHOR = AUTHOR_EN if LANG == "en" else AUTHOR_DE
 EDITOR = EDITOR_EN if LANG == "en" else EDITOR_DE
@@ -355,18 +360,22 @@ def write_joke(topic, fmt, candidates, recent):
         f"Headlines / Schlagzeilen:\n{listing}\n\nRecent punchlines, do not repeat / nicht wiederholen: {recent}",
     )
     choice = int(draft.get("choice") or 0)
-    if not 1 <= choice <= len(candidates) or not draft.get("jokes") or not draft.get("hooks"):
+    if not 1 <= choice <= len(candidates) or not draft.get("quotes") or not draft.get("hooks"):
         return None, None
     article = candidates[choice - 1]
     jokes = "\n".join(
-        f"{i}. Setup: {j.get('setup', '')} | Punchline: {j.get('punchline', '')}" for i, j in enumerate(draft["jokes"], 1)
+        f"{i}. \"{q.get('quote', '')}\" — {q.get('speaker', '')} (real source: {q.get('real_source', '?')})"
+        for i, q in enumerate(draft["quotes"], 1)
     )
     hooks = "\n".join(f"{i}. {h}" for i, h in enumerate(draft["hooks"], 1))
     final = llm(
         EDITOR,
         f"Headline: {article['title']} ({article['source']})\nFormat: {fmt['name']}\n\n"
-        f"Jokes:\n{jokes}\n\nHooks:\n{hooks}\n\n'{T_['send']} ...': {draft.get('send_to', '')}",
+        f"Quotes:\n{jokes}\n\nHooks:\n{hooks}\n\n'{T_['send']} ...': {draft.get('send_to', '')}",
     )
+    # Zitat = Setup, Urheber = Pointe (Rendering und Verlauf bleiben gleich)
+    final["setup"] = final.get("quote") or final.get("setup")
+    final["punchline"] = final.get("speaker") or final.get("punchline")
     return article, {"draft": draft, "final": final}
 
 
@@ -460,11 +469,12 @@ def layout(c, scale=1.0):
 
     # Szene 2: Setup + Platz für Fortschrittsbalken
     setup = base.copy()
-    sf, sl = fit(c["setup"], FONT_BOLD, int(70 * scale), int(44 * scale), TEXT_W, 6)
+    QS = CFG.get("quote_style", False)   # Zitat groß, Urheber kleiner
+    sf, sl = fit(c["setup"], FONT_BLACK if QS else FONT_BOLD, int((92 if QS else 70) * scale), int((52 if QS else 44) * scale), TEXT_W, 6)
     y_after_setup = draw_text(ImageDraw.Draw(setup), sl, sf, y_main, D["text"])
 
     # Szene 3: Pointe als weiße Box
-    punch = boxed(c["punchline"], FONT_BLACK, int(78 * scale), int(48 * scale), D["punchline_box"], D["punchline_text"])
+    punch = boxed(c["punchline"], FONT_BOLD if QS else FONT_BLACK, int((54 if QS else 78) * scale), int((36 if QS else 48) * scale), D["punchline_box"], D["punchline_text"])
     punch_y = y_after_setup + 52
     if punch_y + punch.height > MAIN_BOTTOM and scale > 0.6:
         return layout(c, scale - 0.08)
@@ -603,8 +613,9 @@ def slide_joke(rank, j, scale=1.0):
     head = boxed(j["headline"], FONT_SEMI, 36, 28, D["headline_box"], D["headline_text"], pad=24, max_lines=3)
     img.paste(head, (CX, 360), head)
     top, bottom = 360 + head.height + 50, SH - 110
-    sf, sl = fit(j["setup"], FONT_BOLD, int(74 * scale), int(40 * scale), TEXT_W, 6)
-    punch = boxed(j["punchline"], FONT_BLACK, int(84 * scale), int(44 * scale), D["punchline_box"], D["punchline_text"])
+    QS = CFG.get("quote_style", False)
+    sf, sl = fit(j["setup"], FONT_BLACK if QS else FONT_BOLD, int((88 if QS else 74) * scale), int((46 if QS else 40) * scale), TEXT_W, 6)
+    punch = boxed(j["punchline"], FONT_BOLD if QS else FONT_BLACK, int((54 if QS else 84) * scale), int((34 if QS else 44) * scale), D["punchline_box"], D["punchline_text"])
     block = lh(sf) * len(sl) + 50 + punch.height
     if top + block > bottom and scale > 0.6:
         return slide_joke(rank, j, scale - 0.08)
@@ -636,6 +647,7 @@ def caption(c, topic):
         c["teaser"],
         f"📰 {c['headline']} ({c['source']})",
         f"{c['comment_question']}\n📩 {T_['send']} {c['send_to']}",
+        T_["quote_note"],
     ]
     if CFG.get("disclosure"):
         parts.append(CFG["disclosure"])
@@ -674,15 +686,15 @@ def build_joke(topic, fmt, seen, recent):
         "source": clean(article["source"]),
         "link": article["link"],
         "hook": clean(f["hook"]),
-        "setup": clean(f["setup"]),
-        "punchline": clean(f["punchline"]),
+        "setup": f"“{clean(f['setup']).strip(chr(8220) + chr(8221) + chr(34))}”",
+        "punchline": f"— {clean(f['punchline']).lstrip('—–- ')}",
         "send_to": lower_first(clean(f.get("send_to") or d.get("send_to") or T_["default_send"]).rstrip(".")),
         "comment_question": clean(d.get("comment_question") or T_["default_question"]),
         "teaser": clean(d.get("teaser") or f["hook"]),
         "score": f.get("score"),
         "scores": f.get("scores"),
         "editor_note": f.get("reason", ""),
-        "alternatives": {"hooks": d.get("hooks", []), "jokes": d.get("jokes", [])},
+        "alternatives": {"hooks": d.get("hooks", []), "quotes": d.get("quotes", [])},
     }
     c["caption"] = caption(c, topic)
     return c
